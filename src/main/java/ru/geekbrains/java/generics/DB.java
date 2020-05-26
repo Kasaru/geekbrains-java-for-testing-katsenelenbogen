@@ -87,11 +87,20 @@ public class DB {
         return users;
     }
 
-    public static void addList(String users1) {
-        addToTable(new ArrayList<>(Arrays.asList(users1)));
+    public static void delRowByName(String name) {
+        try {
+            connect();
+            prepareDelete();
+            psDelete.setString(1, name);
+            psDelete.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            disconnect();
+        }
     }
 
-    public static void addToTable(List<String> users){
+    public static void addToTable(List<String> users) {
         try {
             connect();
             prepareInsert();
@@ -104,28 +113,32 @@ public class DB {
                 psInsert.executeUpdate();
             }
             connection.setAutoCommit(true);
-        } catch (SQLException e){
+        } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } finally {
             disconnect();
         }
     }
+
     public static void getFullTable() throws SQLException {
         connect();
         try (ResultSet rs = statement.executeQuery("SELECT * FROM users;")) {
             while (rs.next()) {
-                System.out.println(rs.getString("Name") + " "+ rs.getString("Age") + " " + rs.getString("Email"));
+                System.out.println(rs.getString("Name") + " " + rs.getString("Age") + " " + rs.getString("Email"));
             }
+            System.out.println("");
         }
     }
-    public static void getUsersByAge(int min, int max) throws SQLException {
+
+    public static void showUsersByAge(int min, int max) throws SQLException {
         connect();
 
         try (ResultSet rs = statement.executeQuery(String.format("SELECT * FROM users WHERE (Age > %d) AND (Age < %d);", min, max))) {
             while (rs.next()) {
-                System.out.println(rs.getString("Name") + " "+ rs.getString("Age") + " " + rs.getString("Email"));
+                System.out.println(rs.getString("Name") + " " + rs.getString("Age") + " " + rs.getString("Email"));
             }
         }
+        System.out.println("");
     }
 
 }
