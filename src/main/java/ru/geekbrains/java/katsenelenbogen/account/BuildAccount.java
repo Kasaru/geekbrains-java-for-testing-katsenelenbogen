@@ -83,7 +83,6 @@ public class BuildAccount {
         this.addressAlias = addressAlias;
     }
 
-
     public void setField(Field f, String text) {
         switch (f) {
             case FIRST_NAME:
